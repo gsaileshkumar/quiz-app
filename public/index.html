@@ -4,12 +4,52 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TicTacToe</title>
+    <style>
+      body {
+        background-color: gray;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+      .container {
+        display: flex;
+        padding: 50px;
+        border-radius: 10px;
+        height: 200px;
+        width: 200px;
+        background-color: beige;
+      }
+      form {
+        display: flex;
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+      input,
+      button {
+        padding: 5px;
+        height: 30px;
+        width: 200px;
+        border: none;
+        margin-bottom: 10px;
+        outline: none;
+      }
+    </style>
   </head>
   <body>
-    <form action="game.html" method="get">
-      <input type="text" name="name" id="name" placeholder="name" />
-      <input type="text" id="gameId" placeholder="gameId" />
-      <input type="submit" name="submit" id="submit" />
-    </form>
+    <div class="container">
+      <form action="game.html" method="get">
+        <input type="text" name="name" id="name" placeholder="Name" />
+        <input
+          type="text"
+          name="gameId"
+          id="gameId"
+          placeholder="Do you have a game id?"
+        />
+        <button type="submit" id="submit">Enter</button>
+      </form>
+    </div>
   </body>
 </html>
