@@ -3,53 +3,40 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TicTacToe</title>
-    <style>
-      body {
-        background-color: gray;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-      }
-      .container {
-        display: flex;
-        padding: 50px;
-        border-radius: 10px;
-        height: 200px;
-        width: 200px;
-        background-color: beige;
-      }
-      form {
-        display: flex;
-        width: 100%;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-      }
-      input,
-      button {
-        padding: 5px;
-        height: 30px;
-        width: 200px;
-        border: none;
-        margin-bottom: 10px;
-        outline: none;
-      }
-    </style>
+    <title>Quiz For Fun</title>
+    <link rel="stylesheet" href="./css/index.css" />
   </head>
   <body>
-    <div class="container">
-      <form action="game.html" method="get">
-        <input type="text" name="name" id="name" placeholder="Name" />
-        <input
-          type="text"
-          name="gameId"
-          id="gameId"
-          placeholder="Do you have a game id?"
-        />
-        <button type="submit" id="submit">Enter</button>
-      </form>
+    <div class="wrapper">
+      <h2 class="title">Quiz For Fun</h2>
+      <div class="container">
+        <form action="game.html" method="get">
+          <input type="text" name="name" id="name" placeholder="Name" />
+          <input
+            type="text"
+            name="gameId"
+            id="gameId"
+            placeholder="Do you have a game id?"
+          />
+          <button type="submit" id="submit">Enter Quiz</button>
+        </form>
+      </div>
+      <h5>Together Remotely - Kasthuri Illam</h5>
     </div>
   </body>
+  <script
+    src="https://code.jquery.com/jquery-3.5.0.js"
+    integrity="sha256-r/AaFHrszJtwpe+tHyNi/XCfMxYpbsRg2Uqn0x3s2zc="
+    crossorigin="anonymous"
+  ></script>
+  <script>
+    $(document).ready(function () {
+      const urlParams = new URLSearchParams(window.location.search);
+      const gameId = urlParams.get('gameId');
+      if (gameId) {
+        $('#gameId').val(gameId);
+        $('#gameId').prop('readonly', 'readonly');
+      }
+    });
+  </script>
 </html>

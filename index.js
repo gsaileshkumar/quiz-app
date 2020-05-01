@@ -62,11 +62,9 @@ io.on('connection', (socket) => {
       socket.join(gameId);
       socket.gameId = gameId;
 
-      socket.emit('message', {
-        message: `Welcome to the game!: ${name}`,
-      });
-
-      socket.to(gameId).emit('message', {
+      io.in(gameId).emit('player-joined', {
+        name: name,
+        players: games[gameId].users,
         message: `${name} has joined the game`,
       });
     }
@@ -98,8 +96,7 @@ io.on('connection', (socket) => {
         };
       });
 
-      console.log('questions ', games[gameId].questions);
-      io.in(gameId).emit('message', { message: 'Game started' });
+      io.in(gameId).emit('game-started', { message: 'Game started' });
 
       const question = {
         ...games[gameId].questions[0],
@@ -127,15 +124,21 @@ io.on('connection', (socket) => {
     ) {
       const userIndex = game.users.findIndex((user) => user.id === socket.id);
       const user = game.users[userIndex];
+      if (user.answers.length > cq) {
+        socket.emit('message', {
+          message: 'Already answered',
+        });
+        return;
+      }
       game.questions[cq].responses++;
-      user.answers.push(answer);
       const result = game.questions[cq].correct_answer === answer;
+      user.answers.push({ answer, result });
       if (result) {
         user.total_correct_answers++;
       }
-      socket.emit('answer-result', {
-        result,
-        message: `Your answer is ${result ? 'correct' : 'wrong'}`,
+      io.in(gameId).emit('answer-result', {
+        players: game.users,
+        message: `${user.username} answered ${result ? 'correct' : 'wrong'}`,
       });
 
       if (
@@ -152,19 +155,31 @@ io.on('connection', (socket) => {
         game.questions[cq].responses === 2 &&
         cq === game.questions.length - 1
       ) {
-        const winner = game.users.reduce(
-          (prev, current) =>
-            prev.total_correct_answers > current.total_correct_answers
-              ? prev
-              : current,
-          0
-        );
-        game.winner = winner;
+        let winnerList = [];
+        const winner = game.users.map((user) => {
+          if (winnerList.length === 0) {
+            winnerList.push(user);
+            return;
+          }
+          if (
+            user.total_correct_answers > winnerList[0].total_correct_answers
+          ) {
+            winnerList = [user];
+            return;
+          }
+          if (
+            user.total_correct_answers === winnerList[0].total_correct_answers
+          ) {
+            winnerList.push(user);
+            return;
+          }
+        });
+        game.winner = winnerList;
         game.status = 'Finished';
         io.in(gameId).emit('game-over', {
           message: 'Game over',
           game,
-          winner,
+          winnerList,
         });
       }
     }
@@ -172,12 +187,16 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
     const game = games[socket.gameId];
+    if (!game) {
+      return;
+    }
     const userIndex = game.users.findIndex((user) => user.id === socket.id);
     const user = game.users[userIndex];
-    game.users.splice(userIndex, 1);
-    socket.broadcast.emit('message', {
-      message: `${user.name} has left the game`,
+    socket.broadcast.emit('player-left', {
+      name: user.username,
+      message: `${user.username} has left the game`,
     });
+    game.users.splice(userIndex, 1);
   });
 });
 
