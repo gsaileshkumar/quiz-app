@@ -195,7 +195,7 @@ io.on('connection', (socket) => {
       return;
     }
     socket.leave(socket.gameId);
-    socket.broadcast.emit('player-left', {
+    io.in(socket.gameId).emit('player-left', {
       message: `Your friend has left the game`,
     });
     games[socket.gameId] = null;
