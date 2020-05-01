@@ -83,8 +83,12 @@ io.on('connection', (socket) => {
         return;
       }
       games[gameId].status = 'In Progress';
+      const tokenResp = await fetch(
+        `https://opentdb.com/api_token.php?command=request`
+      );
+      const { token } = await tokenResp.json();
       const resp = await fetch(
-        'https://opentdb.com/api.php?amount=10&category=9&difficulty=easy&type=multiple'
+        `https://opentdb.com/api.php?amount=10&category=9&difficulty=easy&type=multiple&token=${token}`
       );
       const respJson = await resp.json();
 
