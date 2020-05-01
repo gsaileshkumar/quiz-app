@@ -84,7 +84,7 @@ io.on('connection', (socket) => {
       }
       games[gameId].status = 'In Progress';
       const resp = await fetch(
-        'https://opentdb.com/api.php?amount=3&category=9&difficulty=easy&type=multiple'
+        'https://opentdb.com/api.php?amount=10&category=9&difficulty=easy&type=multiple'
       );
       const respJson = await resp.json();
 
