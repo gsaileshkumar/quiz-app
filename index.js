@@ -160,7 +160,7 @@ io.on('connection', (socket) => {
         cq === game.questions.length - 1
       ) {
         let winnerList = [];
-        const winner = game.users.map((user) => {
+        game.users.map((user) => {
           if (winnerList.length === 0) {
             winnerList.push(user);
             return;
@@ -185,6 +185,9 @@ io.on('connection', (socket) => {
           game,
           winnerList,
         });
+        Object.values(io.sockets.connected).map((socket) =>
+          socket.leave(gameId)
+        );
       }
     }
   });
