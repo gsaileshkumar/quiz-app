@@ -67,6 +67,10 @@ io.on('connection', (socket) => {
         players: games[gameId].users,
         message: `${name} has joined the game`,
       });
+    } else {
+      socket.emit('game-not-exists', {
+        message: 'Game not exists',
+      });
     }
   });
 
@@ -190,13 +194,12 @@ io.on('connection', (socket) => {
     if (!game) {
       return;
     }
-    const userIndex = game.users.findIndex((user) => user.id === socket.id);
-    const user = game.users[userIndex];
+    socket.leave(socket.gameId);
     socket.broadcast.emit('player-left', {
-      name: user.username,
-      message: `${user.username} has left the game`,
+      message: `Your friend has left the game`,
     });
-    game.users.splice(userIndex, 1);
+    games[socket.gameId] = null;
+    socket.gameId = null;
   });
 });
 

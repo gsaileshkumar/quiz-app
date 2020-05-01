@@ -28,17 +28,31 @@ socket.on('player-joined', ({ name, players, message }) => {
   $('.alert').text(message);
   $('.alert').show();
   _players = players;
+  if (players.length === 2) {
+    $('#start').show();
+  }
   updatePlayers();
   setTimeout(function () {
     $('.alert').fadeOut();
   }, 3000);
 });
-socket.on('player-left', ({ name, message }) => {
+socket.on('player-left', ({ message }) => {
   console.log(message);
   $('.alert').text(message);
   $('.alert').show();
   setTimeout(function () {
     $('.alert').fadeOut();
+    window.location.href = window.location.origin;
+  }, 3000);
+});
+
+socket.on('game-not-exists', ({ message }) => {
+  console.log(message);
+  $('.alert').text(message);
+  $('.alert').show();
+  setTimeout(function () {
+    $('.alert').fadeOut();
+    window.location.href = window.location.origin;
   }, 3000);
 });
 
@@ -64,7 +78,10 @@ socket.on('game-over', ({ game, winnerList, message }) => {
       : 'Game tied';
   $('.alert').text(winner_message);
   $('.alert').show();
-  $('#new-game').show();
+  setTimeout(function () {
+    $('.alert').fadeOut();
+    window.location.href = window.location.origin;
+  }, 3000);
 });
 
 socket.on('question', ({ question, currentQuestion }) => {
@@ -85,9 +102,6 @@ socket.on('answer-result', ({ players, message }) => {
 
 $('#start').click((e) => {
   socket.emit('start-game', { gameId: _gameId });
-});
-$('#new-game').click((e) => {
-  window.location.reload();
 });
 
 $('body').on('click', '.option', function (e) {
