@@ -125,3 +125,18 @@ button {
   padding: 10px;
   margin-bottom: 10px;
 }
+
+.timer-sec {
+  display: none;
+}
+#timer {
+  height: 100px;
+  width: 100px;
+  border-radius: 50%;
+  border: 2px solid darkmagenta;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 65px;
+  margin: 10px 0;
+}
