@@ -5,6 +5,7 @@ let _players = [];
 let _questionId = null;
 let interval = null;
 let timeout = null;
+let t_timeout = null;
 
 const audio = document.getElementById('timer-audio');
 
@@ -127,6 +128,8 @@ $('body').on('click', '.option', function (e) {
   const answer = $(this).text();
   console.log(answer);
   clearTimeout(timeout);
+  clearInterval(interval);
+  clearTimeout(t_timeout);
   socket.emit('answer', {
     gameId: _gameId,
     answer,
@@ -136,7 +139,6 @@ $('body').on('click', '.option', function (e) {
   audio.pause();
   audio.currentTime = 0;
   $('.timer-sec').hide();
-  clearInterval(interval);
 });
 
 function updatePlayers() {
@@ -171,7 +173,7 @@ function playTimerWithAudio(count) {
     count--;
     $('#count').text(count);
   }, 1000);
-  setTimeout(function () {
+  t_timeout = setTimeout(function () {
     $('.timer-sec').hide();
     audio.pause();
     audio.currentTime = 0;
@@ -185,7 +187,7 @@ function playTimer(count) {
     count--;
     $('#count').text(count);
   }, 1000);
-  setTimeout(function () {
+  t_timeout = setTimeout(function () {
     $('.timer-sec').hide();
     clearInterval(interval);
   }, count * 1000);
