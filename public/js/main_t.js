@@ -70,11 +70,8 @@ socket.on('game-created', ({ gameId, message }) => {
 });
 
 socket.on('game-started', ({ message }) => {
-  //   playTimer(3);
-  // setTimeout(function () {
   $('#start').hide();
   $('.game .container').css('display', 'flex');
-  // }, 3000);
 });
 
 socket.on('game-over', ({ game, winnerList, message }) => {
@@ -95,7 +92,10 @@ socket.on('game-over', ({ game, winnerList, message }) => {
 socket.on('question', ({ question, currentQuestion }) => {
   console.log('question', question);
   clearInterval(interval);
-  $('.question').html(question.text);
+  $('.question').html(
+    `Question ${currentQuestion + 1} out of 10: <br/> </br> 
+    ${question.text}`
+  );
   const options = question.options.map((option) => {
     return `<div class="option">${option}</div>`;
   });
@@ -119,6 +119,7 @@ socket.on('answer-result', ({ players, message }) => {
 
 $('#start').click((e) => {
   socket.emit('start-game', { gameId: _gameId });
+  $('#start').prop('disabled', true);
 });
 
 $('body').on('click', '.option', function (e) {
@@ -136,6 +137,7 @@ $('body').on('click', '.option', function (e) {
     currentQuestion: _questionId,
   });
   $('.option').addClass('answered');
+  $(this).addClass('bg-blue');
   audio.pause();
   audio.currentTime = 0;
   $('.timer-sec').hide();

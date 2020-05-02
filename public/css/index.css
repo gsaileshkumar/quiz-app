@@ -58,8 +58,7 @@ form {
 input,
 button {
   padding: 15px;
-  height: 50px;
-  width: 200px;
+  width: 100%;
   border: none;
   margin-bottom: 10px;
   outline: none;
@@ -139,4 +138,8 @@ button {
   align-items: center;
   font-size: 65px;
   margin: 10px 0;
+}
+
+.bg-blue {
+  background-color: lightblue;
 }
