@@ -95,7 +95,7 @@ socket.on('game-over', ({ game, winnerList, message }) => {
 socket.on('question', ({ question, currentQuestion }) => {
   console.log('question', question);
   clearInterval(interval);
-  $('.question').text(question.text);
+  $('.question').html(question.text);
   const options = question.options.map((option) => {
     return `<div class="option">${option}</div>`;
   });
