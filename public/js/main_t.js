@@ -101,14 +101,14 @@ socket.on('question', ({ question, currentQuestion }) => {
   });
   $('.options').html(options);
   _questionId = currentQuestion;
-  playTimerWithAudio(5);
+  playTimerWithAudio(10);
   timeout = setTimeout(function () {
     socket.emit('answer', {
       gameId: _gameId,
       answer: null,
       currentQuestion: _questionId,
     });
-  }, 5000);
+  }, 10000);
 });
 
 socket.on('answer-result', ({ players, message }) => {
