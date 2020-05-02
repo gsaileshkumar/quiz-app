@@ -76,7 +76,10 @@ io.on('connection', (socket) => {
 
   socket.on('start-game', async ({ gameId }) => {
     try {
-      if (games[gameId].users.length !== 2) {
+      if (
+        games[gameId].users.length !== 2 &&
+        games[gameId].status !== 'In Progress'
+      ) {
         socket.emit('message', {
           message: 'Cannot start game without 2 players',
         });
