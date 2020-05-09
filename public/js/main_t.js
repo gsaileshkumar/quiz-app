@@ -93,7 +93,7 @@ socket.on('question', ({ question, currentQuestion }) => {
   console.log('question', question);
   clearInterval(interval);
   $('.question').html(
-    `Question ${currentQuestion + 1} out of 10: <br/> </br> 
+    `Question ${currentQuestion + 1} out of 5: <br/> </br> 
     ${question.text}`
   );
   const options = question.options.map((option) => {
@@ -101,14 +101,14 @@ socket.on('question', ({ question, currentQuestion }) => {
   });
   $('.options').html(options);
   _questionId = currentQuestion;
-  playTimerWithAudio(20);
+  playTimer(30);
   timeout = setTimeout(function () {
     socket.emit('answer', {
       gameId: _gameId,
       answer: null,
       currentQuestion: _questionId,
     });
-  }, 20000);
+  }, 30000);
 });
 
 socket.on('answer-result', ({ players, message }) => {

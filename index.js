@@ -3,7 +3,8 @@ const http = require('http');
 const socketIo = require('socket.io');
 const path = require('path');
 const { v4: uuid } = require('uuid');
-const fetch = require('node-fetch');
+// const fetch = require('node-fetch');
+const quiz_q = require('./resources');
 
 const port = process.env.PORT || 4000;
 
@@ -86,23 +87,23 @@ io.on('connection', (socket) => {
         return;
       }
       games[gameId].status = 'In Progress';
-      const tokenResp = await fetch(
-        `https://opentdb.com/api_token.php?command=request`
-      );
-      const { token } = await tokenResp.json();
-      const resp = await fetch(
-        `https://opentdb.com/api.php?amount=10&category=9&difficulty=easy&type=multiple&token=${token}`
-      );
-      const respJson = await resp.json();
+      // const tokenResp = await fetch(
+      //   `https://opentdb.com/api_token.php?command=request`
+      // );
+      // const { token } = await tokenResp.json();
+      // const resp = await fetch(
+      //   `https://opentdb.com/api.php?amount=10&category=9&difficulty=easy&type=multiple&token=${token}`
+      // );
+      // const respJson = await resp.json();
 
-      games[gameId].questions = respJson.results.map((result) => {
+      // games[gameId].questions = respJson.results.map((result) => {
+
+      const game_q = getRandom(quiz_q, 5);
+      games[gameId].questions = game_q.map((result) => {
         return {
-          text: result.question,
-          options: shuffle([
-            result.correct_answer,
-            ...result.incorrect_answers,
-          ]),
-          correct_answer: result.correct_answer,
+          text: capitalize(result.question),
+          options: result.options.map((option) => capitalize(option)),
+          correct_answer: capitalize(result.correct_answer),
           responses: 0,
         };
       });
@@ -118,8 +119,6 @@ io.on('connection', (socket) => {
         currentQuestion: 0,
         question,
       });
-
-      // setTimeout(() => {}, 10000);
     } catch (err) {
       console.error(err);
     }
@@ -234,3 +233,31 @@ function shuffle(array) {
 
   return array;
 }
+
+function getSubSet(array, n) {
+  // Shuffle array
+  const shuffled = array.sort(() => 0.5 - Math.random());
+
+  // Get sub-array of first n elements after shuffled
+  return shuffled.slice(0, n);
+}
+
+function getRandom(arr, n) {
+  var result = new Array(n),
+    len = arr.length,
+    taken = new Array(len);
+  if (n > len)
+    throw new RangeError('getRandom: more elements taken than available');
+  while (n--) {
+    var x = Math.floor(Math.random() * len);
+    result[n] = arr[x in taken ? taken[x] : x];
+    taken[x] = --len in taken ? taken[len] : len;
+  }
+  return result;
+}
+
+const capitalize = (s) => {
+  if (typeof s !== 'string') return s;
+  var text = s.trim();
+  return text.charAt(0).toUpperCase() + text.slice(1);
+};
