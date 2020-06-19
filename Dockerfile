@@ -6,12 +6,11 @@ WORKDIR /app
 COPY package*.json ./
 
 RUN rm -rf node_modules
-RUN npm install -g npm@latest
-RUN npm ci --only=production --silent
+RUN npm install
 
 # Copy sources and build
 COPY . .
 
-EXPOSE 4000
+RUN npm run build
 
-CMD ["node", "index.js"]
+CMD ["node", "./dist/server.js"]
